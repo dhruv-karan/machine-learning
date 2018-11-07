@@ -53,7 +53,26 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = [
 # Fitting the ANN to the Training set
 classifier.fit(X_train, y_train, batch_size = 10, nb_epoch = 100)
 
+# improving the model perforemace
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
+from keras.models import Sequential
+from keras.layers import Dense
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 11))
+    classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+    classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+    return classifier
+
+classifier = KerasClassifier(build_fn=KerasClassifier,batch_size=10,nb_epoch=100)
+accuracies = cross_val_score(estimator=classifier,X=X_train,y=y_train,cv=10,n_jobs=-1)
 # Part 3 - Making the predictions and evaluating the model
+
+
+
+
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
